@@ -19,9 +19,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
-import java.util.List;
 
 
 public class SeHarMain{
@@ -34,6 +31,7 @@ public class SeHarMain{
         BrowserMobProxy proxy = new BrowserMobProxyServer();
         proxy.start(0);
 
+
 //        //get the Selenium proxy object - org.openqa.selenium.Proxy;
         Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
         final String proxyStr = "localhost:" + proxy.getPort();
@@ -44,27 +42,34 @@ public class SeHarMain{
 
 
 
-        System.setProperty("webdriver.chrome.driver","/Users/ateja/seDrivers/chromedriver");
-        System.setProperty("webdriver.chrome.logfile","/Users/ateja/seDrivers/chrome.log");
+        System.setProperty("webdriver.chrome.driver","/Users/adamteja/IdeaProjects/SeHar/chromedriver");
+        System.setProperty("webdriver.chrome.logfile","/Users/adamteja/IdeaProjects/SeHar/out/chrome.log");
         System.setProperty("webdriver.chrome.verboseLogging", "true");
         ChromeOptions options = new ChromeOptions();
         options.setCapability(CapabilityType.PROXY, seleniumProxy);
         WebDriver driver = new ChromeDriver(options);
+        driver.manage().deleteAllCookies();
 
         // enable more detailed HAR capture, if desired (see CaptureType for the complete list)
-        proxy.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_CONTENT);
+//        proxy.enableHarCaptureTypes(CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_CONTENT);
+        proxy.enableHarCaptureTypes(
+                CaptureType.REQUEST_HEADERS, CaptureType.REQUEST_COOKIES,
+                CaptureType.REQUEST_CONTENT, CaptureType.RESPONSE_HEADERS, CaptureType.RESPONSE_COOKIES,
+                CaptureType.RESPONSE_CONTENT, CaptureType.RESPONSE_BINARY_CONTENT, CaptureType.REQUEST_BINARY_CONTENT);
         proxy.newHar("test");
+
 
 
         driver.get("https://www.williams-sonoma.com/");
 
 
-        int wait = 10;
+        int wait = 20000;
         WebDriverWait WAIT = new WebDriverWait(driver,wait);
         try {
             System.out.println("waiting for document to finish");
 
             WAIT.until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+
         }catch(Exception e){
             System.out.println("wait failed");
         }
@@ -85,18 +90,18 @@ public class SeHarMain{
             String url = results.get(i).getRequest().getUrl().toString();
             System.out.println("["+i+"] "+url);
         }
-//        String sFilename = "/Users/ateja/seDrivers/test.har";
-//        File harFile = new File(sFilename);
-//
-//        try {
-//            har.writeTo(harFile);
-//            System.out.println("write to file " + sFilename);
-//
-//        } catch (IOException ex) {
-//            System.out.println (ex.toString());
-//            System.out.println("Could not find file " + sFilename);
-//        }
-//
+        String sFilename = "/Users/adamteja/IdeaProjects/SeHar/out/test.har";
+        File harFile = new File(sFilename);
+
+        try {
+            har.writeTo(harFile);
+            System.out.println("write to file " + sFilename);
+
+        } catch (IOException ex) {
+            System.out.println (ex.toString());
+            System.out.println("Could not find file " + sFilename);
+        }
+
 //
 //        //Close the browser
         proxy.stop();
