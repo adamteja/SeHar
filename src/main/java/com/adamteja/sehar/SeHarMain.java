@@ -1,6 +1,7 @@
 package com.adamteja.sehar;
 
 import net.lightbody.bmp.core.har.HarEntry;
+import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +16,8 @@ import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.CaptureType;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.File;
@@ -25,7 +28,10 @@ import java.util.List;
 public class SeHarMain{
 
     public static void main(String[] args){
-        System.out.println("Se HAR");
+        PropertyConfigurator.configure("log4j.properties");
+        final Logger logger = LoggerFactory.getLogger(SeHarMain.class);
+        logger.debug("Se HAR");
+
 
         //Proxy Stuff
         // start the proxy
@@ -43,8 +49,8 @@ public class SeHarMain{
 
 
 
-        System.setProperty("webdriver.chrome.driver","/Users/adamteja/IdeaProjects/SeHar/chromedriver");
-        System.setProperty("webdriver.chrome.logfile","/Users/adamteja/IdeaProjects/SeHar/out/chrome.log");
+        System.setProperty("webdriver.chrome.driver","/Users/ateja/Drivers/chromedriver");
+        System.setProperty("webdriver.chrome.logfile","/Users/ateja/IdeaProjects/SeHar/chrome.log");
         System.setProperty("webdriver.chrome.verboseLogging", "true");
         ChromeOptions options = new ChromeOptions();
         options.setCapability(CapabilityType.PROXY, seleniumProxy);
@@ -91,7 +97,7 @@ public class SeHarMain{
             String url = results.get(i).getRequest().getUrl().toString();
             System.out.println("["+i+"] "+url);
         }
-        String sFilename = "/Users/adamteja/IdeaProjects/SeHar/out/test.har";
+        String sFilename = "/Users/ateja/IdeaProjects/SeHar/out/test.har";
         File harFile = new File(sFilename);
 
         try {
