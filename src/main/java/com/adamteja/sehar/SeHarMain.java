@@ -28,6 +28,7 @@ import java.util.List;
 public class SeHarMain{
 
     public static void main(String[] args){
+        String projectRoot = "/Users/adamteja/IdeaProjects/SeHar";
         PropertyConfigurator.configure("log4j.properties");
         final Logger logger = LoggerFactory.getLogger(SeHarMain.class);
         logger.debug("Se HAR");
@@ -49,8 +50,8 @@ public class SeHarMain{
 
 
 
-        System.setProperty("webdriver.chrome.driver","/Users/ateja/Drivers/chromedriver");
-        System.setProperty("webdriver.chrome.logfile","/Users/ateja/IdeaProjects/SeHar/chrome.log");
+        System.setProperty("webdriver.chrome.driver",projectRoot+"/chromedriver");
+        System.setProperty("webdriver.chrome.logfile",projectRoot+"/out/chrome.log");
         System.setProperty("webdriver.chrome.verboseLogging", "true");
         ChromeOptions options = new ChromeOptions();
         options.setCapability(CapabilityType.PROXY, seleniumProxy);
@@ -97,7 +98,7 @@ public class SeHarMain{
             String url = results.get(i).getRequest().getUrl().toString();
             System.out.println("["+i+"] "+url);
         }
-        String sFilename = "/Users/ateja/IdeaProjects/SeHar/out/test.har";
+        String sFilename = projectRoot+"/out/test.har";
         File harFile = new File(sFilename);
 
         try {
