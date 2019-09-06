@@ -7,6 +7,9 @@ import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -28,34 +31,34 @@ import java.util.List;
 public class SeHarMain{
 
     public static void main(String[] args){
-        String projectRoot = "/Users/adamteja/IdeaProjects/SeHar";
+        String projectRoot = "/Users/ateja/IdeaProjects/SeHar";
         PropertyConfigurator.configure("log4j.properties");
         final Logger logger = LoggerFactory.getLogger(SeHarMain.class);
         logger.debug("Se HAR");
 
-
-        //Proxy Stuff
-        // start the proxy
+//start BrowserMobProxy
         BrowserMobProxy proxy = new BrowserMobProxyServer();
         proxy.start(0);
 
-
-//        //get the Selenium proxy object - org.openqa.selenium.Proxy;
+// Create Selenium Proxy
         Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
         final String proxyStr = "localhost:" + proxy.getPort();
         seleniumProxy.setHttpProxy(proxyStr);
 
+// Create a WebDriver
+//        System.setProperty("webdriver.chrome.driver",projectRoot+"/chromedriver");
+//        System.setProperty("webdriver.chrome.logfile",projectRoot+"/out/chrome.log");
+//        System.setProperty("webdriver.chrome.verboseLogging", "true");
+//        ChromeOptions options = new ChromeOptions();
+//        options.setCapability(CapabilityType.PROXY, seleniumProxy);
+//        WebDriver driver = new ChromeDriver(options);
 
-        //!Proxy Stuff
+        System.setProperty("webdriver.gecko.driver",projectRoot+"/geckodriver");
+        FirefoxOptions options = new FirefoxOptions();
+        options.setProxy(seleniumProxy);
+        WebDriver driver = new FirefoxDriver(options);
 
 
-
-        System.setProperty("webdriver.chrome.driver",projectRoot+"/chromedriver");
-        System.setProperty("webdriver.chrome.logfile",projectRoot+"/out/chrome.log");
-        System.setProperty("webdriver.chrome.verboseLogging", "true");
-        ChromeOptions options = new ChromeOptions();
-        options.setCapability(CapabilityType.PROXY, seleniumProxy);
-        WebDriver driver = new ChromeDriver(options);
         driver.manage().deleteAllCookies();
 
         // enable more detailed HAR capture, if desired (see CaptureType for the complete list)
@@ -68,7 +71,7 @@ public class SeHarMain{
 
 
 
-        driver.get("https://www.williams-sonoma.com/");
+        driver.get("http://www.google.com/");
 
 
         int wait = 20000;
